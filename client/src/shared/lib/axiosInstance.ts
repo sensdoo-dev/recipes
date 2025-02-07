@@ -22,7 +22,7 @@ export function setAccessToken(token: string): void {
 
 //* Перехватчик запросов: в каждый запрос добавляет HTTP заголовок Authorization, значением заголовка будет кратковременный токен
 instance.interceptors.request.use((config: ExtendedAxiosRequestConfig) => {
-  if (!config.headers.authorization) {
+  if (!config.headers.authorization) {    
     config.headers.authorization = `Bearer ${accessToken}`;
   }
   return config;
@@ -34,8 +34,7 @@ instance.interceptors.response.use(
   async (error: AxiosError) => {
     // ? запомнили информацию о прошлом запросе
     const prevRequest: ExtendedAxiosRequestConfig | undefined = error.config;
-    // ?  проверяем статус и проверка на первичность запроса, если попали внутрь, значит токен протух и нам нужна новая пара
-
+    // ?  проверяем статус и проверка на первичность запроса, если попали внутрь, значит токен протух и нам нужна новая пара    
     if (error.response && error.response.status === 403 && prevRequest && !prevRequest.sent) {
       // ? делаем запрос на пару токенов
       const { data: response } = await instance.get('/auth/refreshTokens');

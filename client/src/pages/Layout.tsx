@@ -2,10 +2,10 @@ import Footer from "../shared/ui/Footer/Footer";
 import { Outlet } from "react-router-dom";
 import Header from "../shared/ui/Header/Header";
 
-export default function Layout({user, settUser}) {
+export default function Layout({user, setUser}) {
   return (
     <div>
-      <Header user={user} setUser={settUser} />
+      <Header user={user} setUser={setUser} />
       <main style={{
           display: "flex",
           justifyContent: "center", 

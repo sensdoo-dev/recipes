@@ -5,12 +5,13 @@ import ApiUser from "../../../entities/User/api/ApiUser";
 export default function Header({user, setUser}) {
 
   const navigate = useNavigate()
+  
 
   async function handleLogout(e) {
     e.preventDefault()
     const {data} = await ApiUser.logout()
     setAccessToken('')
-    setUser({})
+    setUser(null)
     navigate('/')
   }
 
@@ -20,7 +21,7 @@ export default function Header({user, setUser}) {
         <div className="navbar-brand">
 
           <NavLink className="navbar-item" to="/">
-            <h4 className="title">YOUR SUPER APP</h4>
+            <h4 className="title">{import.meta.env.VITE_APP_TITLE}</h4>
           </NavLink>
 
           <a role="button" className="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
@@ -32,7 +33,7 @@ export default function Header({user, setUser}) {
         </div>
 
         <div id="navbarBasicExample" className="navbar-menu">
-          {!user?.firstName ? (
+          {!user ? (
             <div className="navbar-end">
               <div className="navbar-item">
                 <div className="buttons">
