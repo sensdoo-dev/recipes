@@ -1,6 +1,6 @@
 const router = require('express').Router();
+const recipesRouter = require('./recipes.routes');
 
-// example заменить на нужный роут
-// router.use('/example', exampleRouter);
+router.use('/', recipesRouter);
 
 module.exports = router;

@@ -1,12 +1,13 @@
 import type { AxiosError, AxiosInstance, AxiosResponse, InternalAxiosRequestConfig } from 'axios';
 import axios from 'axios';
+require('dotenv').config();
 
 type ExtendedAxiosRequestConfig = InternalAxiosRequestConfig & {
   sent?: boolean;
 } 
 
 export const instance: AxiosInstance = axios.create({
-  baseURL: import.meta.env.VITE_API,
+  baseURL: process.env.API_RECIPES,
   headers: { 'Content-Type': 'application/json' },
   withCredentials: true, 
 });
@@ -70,10 +71,7 @@ type Instance = {
 
 export const axiosInstance: Instance = {
   get: (...args) => axiosInstance.get(...args),
-  post: (...args) => {
-    console.log(1);
-    
-    return axiosInstance.post(...args)},
+  post: (...args) => axiosInstance.post(...args),
   put: (...args) => axiosInstance.put(...args),
   delete: (...args) => axiosInstance.delete(...args),
 };

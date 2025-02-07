@@ -21,7 +21,6 @@ function App(): React.JSX.Element {
     ApiUser.refreshTokens()
     .then((response) => {
       const {data, error, statusCode } = response
-      console.log(data);
       
       if(error) {
         setUser(null)
