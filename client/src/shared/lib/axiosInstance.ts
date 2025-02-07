@@ -1,12 +1,12 @@
-import type { AxiosError, AxiosInstance, AxiosResponse } from 'axios';
+import type { AxiosError, AxiosInstance, AxiosResponse, InternalAxiosRequestConfig } from 'axios';
 import axios from 'axios';
 
-type ExtendedAxiosRequestConfig = {
+type ExtendedAxiosRequestConfig = InternalAxiosRequestConfig & {
   sent?: boolean;
-}
+} 
 
 // TODO - создаем экземпляр axios
-export const axiosInstance: AxiosInstance = axios.create({
+export const instance: AxiosInstance = axios.create({
   baseURL: import.meta.env.VITE_API,
   headers: { 'Content-Type': 'application/json' },
   withCredentials: true, 
@@ -21,7 +21,7 @@ export function setAccessToken(token: string): void {
 }
 
 //* Перехватчик запросов: в каждый запрос добавляет HTTP заголовок Authorization, значением заголовка будет кратковременный токен
-axiosInstance.interceptors.request.use((config: ExtendedAxiosRequestConfig) => {
+instance.interceptors.request.use((config: ExtendedAxiosRequestConfig) => {
   if (!config.headers.authorization) {
     config.headers.authorization = `Bearer ${accessToken}`;
   }
@@ -29,16 +29,16 @@ axiosInstance.interceptors.request.use((config: ExtendedAxiosRequestConfig) => {
 });
 
 //* Перехватчик ответов:
-axiosInstance.interceptors.response.use(
+instance.interceptors.response.use(
   (response: AxiosResponse) => response,
   async (error: AxiosError) => {
     // ? запомнили информацию о прошлом запросе
     const prevRequest: ExtendedAxiosRequestConfig | undefined = error.config;
     // ?  проверяем статус и проверка на первичность запроса, если попали внутрь, значит токен протух и нам нужна новая пара
 
-    if (error.response.status === 403 && prevRequest && !prevRequest.sent) {
+    if (error.response && error.response.status === 403 && prevRequest && !prevRequest.sent) {
       // ? делаем запрос на пару токенов
-      const { data: response } = await axiosInstance.get('/auth/refreshTokens');
+      const { data: response } = await instance.get('/auth/refreshTokens');
 
       // ? достаем токен из ответа
       setAccessToken(response.data.accessToken);
@@ -48,8 +48,37 @@ axiosInstance.interceptors.response.use(
       // ? устанавливаем заголовки
       prevRequest.headers.authorization = `Bearer ${accessToken}`;
       // ? делаем повторный запрос
-      return axiosInstance(prevRequest);
+      return instance(prevRequest);
     }
     return Promise.reject(error);
   },
 );
+
+
+type Instance = {
+  get: <T>(
+    arg1: Parameters<typeof instance.get<T>>[0],
+    arg2?: Parameters<typeof instance.get<T>>[1]
+  ) => Promise<T>;
+  post: <T>(
+    arg1: Parameters<typeof instance.post<T>>[0],
+    arg2?: Parameters<typeof instance.post<T>>[1],
+    arg3?: Parameters<typeof instance.post<T>>[2]
+  ) => Promise<T>;
+  put: <T>(
+    arg1: Parameters<typeof instance.put<T>>[0],
+    arg2?: Parameters<typeof instance.put<T>>[1],
+    arg3?: Parameters<typeof instance.post<T>>[2]
+  ) => Promise<T>;
+  delete: <T>(
+    arg1: Parameters<typeof instance.delete<T>>[0],
+    arg2?: Parameters<typeof instance.delete<T>>[1]
+  ) => Promise<T>;
+};
+
+export const axiosInstance: Instance = {
+  get: (...args) => axiosInstance.get(...args),
+  post: (...args) => axiosInstance.post(...args),
+  put: (...args) => axiosInstance.put(...args),
+  delete: (...args) => axiosInstance.delete(...args),
+};
