@@ -5,7 +5,7 @@
   "scripts": {
     "start": "node ./src/app.js",
     "dev": "nodemon ./src/app.js --ext js,json,jsx",
-    "db:create": "npx sequelize db:create",
+    "db:create": "sudo npx sequelize db:create",
     "db:drop": "npx sequelize db:drop",
     "db:mig": "npx sequelize db:migrate",
     "db:seed": "npx sequelize db:seed:all",

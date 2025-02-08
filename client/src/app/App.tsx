@@ -47,7 +47,7 @@ function App(): React.JSX.Element {
         {
   
           path: '/',
-          element: <MainPage />
+          element: <MainPage  setMessage={setMessage}/>
   
         },
         {
