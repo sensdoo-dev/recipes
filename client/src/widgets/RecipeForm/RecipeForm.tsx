@@ -30,11 +30,17 @@ export default function RecipeForm({setMessage, setRecipes}): React.JSX.Element 
       e.preventDefault()
       try {
         const {query} = formData      
-        const { data } = await ApiRecipe.complexSearch(query)
-        console.log(data);
-        setRecipes(data.results)
-        localStorage.setItem('lastRecipeSearch', JSON.stringify(data.results))
+        const response = await ApiRecipe.complexSearch(query)
+        const { data, error, statusCode } = response
         
+        if (error) {
+          setRecipes(null)
+        }
+
+        if (statusCode < 400 && data) {
+          setRecipes(data.results)
+          localStorage.setItem('lastRecipeSearch', JSON.stringify(data.results))
+        }      
       } catch (error) {
         console.log(error);      
         setTimeout(() => {

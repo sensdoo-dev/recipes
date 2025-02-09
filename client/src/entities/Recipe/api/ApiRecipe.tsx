@@ -9,12 +9,17 @@ enum RECIPE_API_ROUTES {
   RECIPE_INFORMATION = 'api/recipeInformation',
 }
 
-
+type TSearchResponse = {
+  number: number
+  offset: number
+  results: Array<TRecipeCard>
+  totalResults: number
+}
 
 export default class ApiRecipe {
-  static async complexSearch(params: string): Promise<TApiResponseSuccess<TRecipeCard[]> | TApiResponseReject> {
+  static async complexSearch(params: string): Promise<TApiResponseSuccess<TSearchResponse> | TApiResponseReject> {
     try {
-      const response = await instance.get<TApiResponseSuccess<TRecipeCard[]>>(RECIPE_API_ROUTES.COMPLEX_SEARCH + `?query=${params}`)
+      const response = await instance.get<TApiResponseSuccess<TSearchResponse>>(RECIPE_API_ROUTES.COMPLEX_SEARCH + `?query=${params}`)
       return response.data
     } catch (error: unknown) {  
       if (error instanceof AxiosError) {

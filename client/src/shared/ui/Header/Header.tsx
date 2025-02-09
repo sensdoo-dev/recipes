@@ -1,11 +1,16 @@
 import { NavLink, useNavigate } from "react-router-dom";
 import { setAccessToken } from "../../lib/axiosInstance";
 import ApiUser from "../../../entities/User/api/ApiUser";
+import { useState } from "react";
 
 export default function Header({user, setUser}) {
 
   const navigate = useNavigate()
-  
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  const toggleMenu = () => {
+    setIsMenuOpen(!isMenuOpen);
+  };
 
   async function handleLogout(e) {
     e.preventDefault()
@@ -24,15 +29,22 @@ export default function Header({user, setUser}) {
             <h4 className="title">{import.meta.env.VITE_APP_TITLE}</h4>
           </NavLink>
 
-          <a role="button" className="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
-            <span aria-hidden="true"></span>
-            <span aria-hidden="true"></span>
-            <span aria-hidden="true"></span>
-            <span aria-hidden="true"></span>
+          <a 
+            role="button" 
+            className={`navbar-burger ${isMenuOpen ? "is-active" : ""}`} 
+            aria-label="menu" 
+            aria-expanded="false" 
+            data-target="navToggle"
+            onClick={toggleMenu}
+            >
+              <span aria-hidden="true"></span>
+              <span aria-hidden="true"></span>
+              <span aria-hidden="true"></span>
+              <span aria-hidden="true"></span>
           </a>
         </div>
 
-        <div id="navbarBasicExample" className="navbar-menu">
+        <div id="navToggle" className={`navbar-menu ${isMenuOpen ? "is-active" : ""}`}>
           {!user ? (
             <div className="navbar-end">
               <div className="navbar-item">

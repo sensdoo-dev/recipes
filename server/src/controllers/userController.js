@@ -12,7 +12,6 @@ module.exports = class UserController {
       if (!email || !password) {
         return res.status(400).json(formatResponse(400, 'Нужно заполнить все поля'));
       }
-
       const candidate = await User.authenticate(email);
 
       if (!candidate) {
