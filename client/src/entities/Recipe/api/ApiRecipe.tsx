@@ -7,6 +7,7 @@ import { defaultRejectedAxiosError } from '../../../shared/consts';
 
 enum RECIPE_API_ROUTES {
   COMPLEX_SEARCH = 'api/complexSearch',
+  RECIPE_INFORMATION = 'api/information/:recipeId',
 }
 
 type TRecipeParams = {
@@ -17,8 +18,6 @@ export default class ApiRecipe {
   static async complexSearch(params: TRecipeParams): Promise<any> {
     try {
       const response = await instance.get<AxiosResponse>(RECIPE_API_ROUTES.COMPLEX_SEARCH + `?query=${params.query}`)
-      console.log(response);
-      
       return response.data
     } catch (error: unknown) {  
       if (error instanceof AxiosError) {
@@ -31,4 +30,20 @@ export default class ApiRecipe {
       return defaultRejectedAxiosError;
     }
   }
+
+static async getRecipeInfomationById(recipeId: number) {
+  try {
+    const response = await instance.get<AxiosResponse>(RECIPE_API_ROUTES.RECIPE_INFORMATION + `/${recipeId}`)    
+    return response.data
+  } catch (error: unknown) {  
+    if (error instanceof AxiosError) {
+      if (!error.response) {
+        return defaultRejectedAxiosError as TApiResponseReject;
+      }
+      return error.response.data as TApiResponseReject;
+    }
+    
+    return defaultRejectedAxiosError;
+  }
+}
 }

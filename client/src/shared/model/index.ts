@@ -11,3 +11,14 @@ export type TApiResponseReject = {
   statusCode: number;
   error: string;
 }
+
+export type TRecipeCard = {
+  id: number;
+  title: string;
+  image: string;
+  imageType: string;
+};
+
+export type TProps = {
+  recipe?: TRecipeCard;
+}

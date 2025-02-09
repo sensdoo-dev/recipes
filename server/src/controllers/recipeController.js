@@ -7,13 +7,25 @@ module.exports = class RecipeController {
   static async complexSearch(req, res) {
     try {
       const { query } = req.query;
+
+      if (!query) {
+        return res
+          .status(400)
+          .json(formatResponse(400, 'Не переданы аргументы запроса"'));
+      }
+
       const response = await axios.get(
         `${process.env.API_RECIPES}/complexSearch?apiKey=${process.env.API_KEY}&query=${query}`,
         {
           headers: { 'Content-Type': 'application/json' },
         },
       );
-      console.log(response.data);
+
+      if (!response) {
+        return res
+          .status(400)
+          .json(formatResponse(400, 'Ошибка получения данных из "poonacular.com"'));
+      }
 
       res.status(200).json(formatResponse(200, 'OK', response.data));
     } catch (error) {

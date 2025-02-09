@@ -1,13 +1,8 @@
 import React, { useState } from 'react';
 import RecipeForm from '../../widgets/RecipeForm/RecipeForm';
 import RecipeCard from '../../widgets/RecipeCard/RecipeCard';
+import { TRecipeCard } from '../../shared/model'
 
-type TRecipeCard = {
-  id: number;
-  title: string;
-  image: string;
-  imageType: string;
-};
 
 export default function MainPage({ setMessage }): React.JSX.Element {
   const [recipes, setRecipes] = useState<TRecipeCard[]>([]);

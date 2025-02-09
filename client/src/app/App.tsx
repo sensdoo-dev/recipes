@@ -9,6 +9,7 @@ import NotFound from '../pages/NotFound/NotFound';
 import MainPage from '../pages/MainPage/MainPage';
 import RegistrPage from '../pages/RegistrPage/RegistrPage';
 import LoginPage from '../pages/LoginPage/LoginPage';
+import RecipeInformation from '../pages/RecipeInformation/RecipeInformation';
 
 
 
@@ -57,6 +58,10 @@ function App(): React.JSX.Element {
         {
           path: "/auth/login",
           element: <LoginPage setUser={setUser} setMessage={setMessage} />,
+        },
+        {
+          path: "/recipeInformation/:recipeId",
+          element: <RecipeInformation />,
         },
       ]}
   ]);
