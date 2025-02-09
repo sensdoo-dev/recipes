@@ -1,23 +1,20 @@
 import type { AxiosResponse } from 'axios';
 import { AxiosError } from 'axios';
-import { instance, recipeAxios } from '../../../shared/lib/axiosInstance';
-import type { TApiResponseReject, TApiResponseSuccess } from '../../../shared/model';
-import type { TLoginData, TRegistrData, TUserWithToken } from '../model';
+import { instance } from '../../../shared/lib/axiosInstance';
+import type { TApiResponseReject, TApiResponseSuccess, TRecipeCard, TRecipeInformation } from '../../../shared/model';
 import { defaultRejectedAxiosError } from '../../../shared/consts';
 
 enum RECIPE_API_ROUTES {
   COMPLEX_SEARCH = 'api/complexSearch',
-  RECIPE_INFORMATION = 'api/information/:recipeId',
+  RECIPE_INFORMATION = 'api/recipeInformation',
 }
 
-type TRecipeParams = {
-  query: string
-}
+
 
 export default class ApiRecipe {
-  static async complexSearch(params: TRecipeParams): Promise<any> {
+  static async complexSearch(params: string): Promise<TApiResponseSuccess<TRecipeCard[]> | TApiResponseReject> {
     try {
-      const response = await instance.get<AxiosResponse>(RECIPE_API_ROUTES.COMPLEX_SEARCH + `?query=${params.query}`)
+      const response = await instance.get<TApiResponseSuccess<TRecipeCard[]>>(RECIPE_API_ROUTES.COMPLEX_SEARCH + `?query=${params}`)
       return response.data
     } catch (error: unknown) {  
       if (error instanceof AxiosError) {
@@ -31,9 +28,9 @@ export default class ApiRecipe {
     }
   }
 
-static async getRecipeInfomationById(recipeId: number) {
+static async getRecipeInfomationById(recipeId: string) {
   try {
-    const response = await instance.get<AxiosResponse>(RECIPE_API_ROUTES.RECIPE_INFORMATION + `/${recipeId}`)    
+    const response = await instance.get<TApiResponseSuccess<TRecipeInformation>>(RECIPE_API_ROUTES.RECIPE_INFORMATION + `/${recipeId}`)    
     return response.data
   } catch (error: unknown) {  
     if (error instanceof AxiosError) {

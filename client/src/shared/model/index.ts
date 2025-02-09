@@ -19,6 +19,25 @@ export type TRecipeCard = {
   imageType: string;
 };
 
+export type TRecipeIngredient = {
+  id: number
+  name: string
+  original: string
+  image: string
+}
+
+export type TRecipeInformation = {
+  id: number;
+  title: string;
+  image: string;
+  diets: [];
+  dishTypes: []
+  instructions: string
+  readyInMinutes: number
+  summary: string
+  extendedIngredients: TRecipeIngredient[]
+};
+
 export type TProps = {
   recipe?: TRecipeCard;
 }

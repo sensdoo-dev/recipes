@@ -24,7 +24,7 @@ export default function RecipeForm({setMessage, setRecipes}): React.JSX.Element 
       e.preventDefault()
       try {
         const {query} = formData      
-        const { data } = await ApiRecipe.complexSearch({query})
+        const { data } = await ApiRecipe.complexSearch(query)
         console.log(data);
         setRecipes(data.results)
         

@@ -15,7 +15,7 @@ import RecipeInformation from '../pages/RecipeInformation/RecipeInformation';
 
 function App(): React.JSX.Element {
   const [user, setUser] = useState<TUser | null>(null);
-  const [message, setMessage] = useState('')
+  const [message, setMessage] = useState<string>('')
 
   useEffect(() => {
     
@@ -61,7 +61,7 @@ function App(): React.JSX.Element {
         },
         {
           path: "/recipeInformation/:recipeId",
-          element: <RecipeInformation />,
+          element: <RecipeInformation setMessage={setMessage} />,
         },
       ]}
   ]);
