@@ -5,36 +5,58 @@ import { TApiResponseReject, TRecipeInformation } from '../../shared/model'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBookmark } from '@fortawesome/free-solid-svg-icons';
 
+const mockRecipeInformation: TRecipeInformation = 
+{
+  recipeId: 4444,
+  title: 'Chiken',
+  image: 'https://img.spoonacular.com/recipes/635675-556x370.jpg',
+  diets: [],
+  dishTypes: [],
+  instructions: 'Boozy Bbq Chicken could be just the <b>gluten free and dairy free</b>  recipe you been looking for. This recipe makes 6 servings with <b>725 calories</b> <b>32g of protein</b> , and <b>33g of fat</b>',
+  readyInMinutes: 45,
+  summary: 'Barbecue Chicken works really well with Zinfandel and Sparkling rosé. Fruity, low tannin zinfandel is great for any sticky, saucy barbecue chicken dish. If youre not feeling red wine, a sparkling rosé will work too. You could try ONEHOPE Zinfandel Wine. Reviewers quite like it with a 4.6 out of 5 star rating and a price of about 20 dollars per bottle.',
+  isFavourite: false,
+  extendedIngredients: [ {id: 1, name: 'white wine'}, {id: 2, name: 'broccoli'}, {id: 3, name: 'fresh garlic'}, {id: 4, name: 'whole chicken'}, {id: 5, name: 'salt'}, {id: 6, name: 'red onion'}, {id: 7, name: 'red bell pepper'}, {id: 8, name: 'pepper'},]
+}
+
 export default function RecipeInformation({setMessage}): React.JSX.Element {
   const nav = useNavigate()
   const { recipeId } = useParams<string>()
-  const [recipeInfo, setRecipeInfo] = useState<TRecipeInformation | null>(null)
-  const [isFavourite, setFavourite] = useState<boolean>(false)
+  const [recipeInfo, setRecipeInfo] = useState<TRecipeInformation>(mockRecipeInformation)
 
   async function addToFavouriteHandler(e: MouseEvent) {
     e.preventDefault()
-    // ApiRecipe.addToFavourite()
+    
+    recipeInfo.isFavourite = !recipeInfo.isFavourite
+    console.log(recipeInfo.isFavourite);
+    ApiRecipe.addToFavourite(recipeInfo)
+      .then(res => {
+        setRecipeInfo((prev) => ({...prev, isFavourite: Boolean(res.data)}))
+        // console.log(recipeInfo);
+        
+      })
+      .catch(console.log)
   }
 
   useEffect(() => {
     if (recipeId) {
-      ApiRecipe.getRecipeInfomationById(recipeId).then(res => {
-        const { data, statusCode, error } = res
+      // ApiRecipe.getRecipeInfomationById(recipeId).then(res => {
+      //   const { data, statusCode, error } = res
   
-        if (error) {
-          setRecipeInfo(null)
-        }
+      //   if (error) {
+      //     setRecipeInfo(null)
+      //   }
   
-        if (statusCode < 400) {
-          setRecipeInfo(data)
-        }
+      //   if (statusCode < 400) {
+      //     setRecipeInfo(data)
+      //   }
   
-      }).catch((error: TApiResponseReject) => {
-          setTimeout(() => {
-            setMessage('')
-          }, 3000)
-          setMessage(error.message)
-        })
+      // }).catch((error: TApiResponseReject) => {
+      //     setTimeout(() => {
+      //       setMessage('')
+      //     }, 3000)
+      //     setMessage(error.message)
+      //   })
     } 
       
   }, [])
@@ -53,7 +75,7 @@ export default function RecipeInformation({setMessage}): React.JSX.Element {
               </figure>
             </div>
             <div className="media-content">
-              <button onClick={addToFavouriteHandler} className="icon" style={isFavourite ? {float: 'right', color: 'orange'} : {float: 'right'}}>
+              <button onClick={addToFavouriteHandler} className="icon" style={recipeInfo.isFavourite ? {float: 'right', color: 'orange'} : {float: 'right'}}>
                 <FontAwesomeIcon icon={faBookmark} />
               </button>
               <p className="title is-4">{recipeInfo?.title}</p>

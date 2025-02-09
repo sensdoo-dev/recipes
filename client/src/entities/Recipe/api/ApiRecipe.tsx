@@ -6,7 +6,7 @@ import { defaultRejectedAxiosError } from '../../../shared/consts';
 
 enum RECIPE_API_ROUTES {
   COMPLEX_SEARCH = 'api/complexSearch',
-  RECIPE_INFORMATION = 'api/recipeInformation',
+  RECIPE_INFORMATION = 'api/recipeInformations',
 }
 
 type TSearchResponse = {
@@ -33,19 +33,37 @@ export default class ApiRecipe {
     }
   }
 
-static async getRecipeInfomationById(recipeId: string) {
-  try {
-    const response = await instance.get<TApiResponseSuccess<TRecipeInformation>>(RECIPE_API_ROUTES.RECIPE_INFORMATION + `/${recipeId}`)    
-    return response.data
-  } catch (error: unknown) {  
-    if (error instanceof AxiosError) {
-      if (!error.response) {
-        return defaultRejectedAxiosError as TApiResponseReject;
+  static async getRecipeInfomationById(recipeId: string): Promise<TApiResponseSuccess<TRecipeInformation> | TApiResponseReject> {
+    try {
+      const response = await instance.get<TApiResponseSuccess<TRecipeInformation>>(RECIPE_API_ROUTES.RECIPE_INFORMATION + `/${recipeId}`)    
+      return response.data
+    } catch (error: unknown) {  
+      if (error instanceof AxiosError) {
+        if (!error.response) {
+          return defaultRejectedAxiosError as TApiResponseReject;
+        }
+        return error.response.data as TApiResponseReject;
       }
-      return error.response.data as TApiResponseReject;
+      
+      return defaultRejectedAxiosError;
     }
-    
-    return defaultRejectedAxiosError;
   }
-}
+
+  static async addToFavourite(recipe: TRecipeInformation): Promise<TApiResponseSuccess<string> | TApiResponseReject> {
+    try {
+      const response = await instance.post<TApiResponseSuccess<string>>(RECIPE_API_ROUTES.RECIPE_INFORMATION, recipe)    
+      return response.data
+    } catch (error: unknown) {  
+      console.log(error);
+      if (error instanceof AxiosError) {
+        
+        if (!error.response) {
+          return defaultRejectedAxiosError as TApiResponseReject;
+        }
+        return error.response.data as TApiResponseReject;
+      }
+      
+      return defaultRejectedAxiosError;
+    }
+  }
 }

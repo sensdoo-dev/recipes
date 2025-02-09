@@ -22,20 +22,22 @@ export type TRecipeCard = {
 export type TRecipeIngredient = {
   id: number
   name: string
-  original: string
-  image: string
+  original?: string
+  image?: string
 }
 
 export type TRecipeInformation = {
-  id: number;
+  recipeId: number;
   title: string;
   image: string;
-  diets: [];
-  dishTypes: []
+  diets?: [];
+  dishTypes?: []
   instructions: string
   readyInMinutes: number
   summary: string
+  isFavourite?: boolean
   extendedIngredients: TRecipeIngredient[]
+  userId?: number
 };
 
 export type TProps = {
