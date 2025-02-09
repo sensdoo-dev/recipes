@@ -1,5 +1,5 @@
-## React Express Sequelize skeleton
+## React Express Sequelize TypeScript
 
 ## With autorization and registration
 
-## TypeScript
+## Recipes App

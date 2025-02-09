@@ -7,6 +7,12 @@ export default function RecipeForm({setMessage, setRecipes}): React.JSX.Element 
   const [formData, setFormData] = useState({query: ''})
   const [isDisabled, setDisabled] = useState(true)
 
+  useEffect(() => {
+    const lastRecipeSearch = localStorage.getItem('lastRecipeSearch')    
+    if (lastRecipeSearch) {
+      setRecipes(JSON.parse(lastRecipeSearch))
+    }
+  }, [])
 
   useEffect(() => {
       const { query } = formData;
@@ -20,13 +26,14 @@ export default function RecipeForm({setMessage, setRecipes}): React.JSX.Element 
       }
     }, [formData]);
   
-    async function regHandler(e: FormEvent) {
+    async function findRecipesHandler(e: FormEvent) {
       e.preventDefault()
       try {
         const {query} = formData      
         const { data } = await ApiRecipe.complexSearch(query)
         console.log(data);
         setRecipes(data.results)
+        localStorage.setItem('lastRecipeSearch', JSON.stringify(data.results))
         
       } catch (error) {
         console.log(error);      
@@ -39,7 +46,7 @@ export default function RecipeForm({setMessage, setRecipes}): React.JSX.Element 
   
     return (
       <>
-        <form onSubmit={regHandler} noValidate>
+        <form onSubmit={findRecipesHandler} noValidate>
           <div className="field">
             <div className="control">
               <input
