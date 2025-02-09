@@ -66,6 +66,32 @@ module.exports = class RecipeController {
     }
   }
 
+  static async getRecipeInformationByUserId(req, res) {
+    try {
+      const { userId } = req.params;
+
+      if (!userId) {
+        return res.status(400).json(formatResponse(400, 'Не передан ID пользователя"'));
+      }
+
+      const response = await RecipeInformation.findAll({
+        where: { userId, isFavourite: true },
+      });
+
+      // console.log(response);
+
+      if (!response) {
+        return res.status(400).json(formatResponse(400, 'Ошибка получения данных'));
+      }
+
+      res.status(200).json(formatResponse(200, 'OK', response));
+    } catch (error) {
+      res
+        .status(500)
+        .json(formatResponse(500, 'Unxpected server error', null, error.message));
+    }
+  }
+
   static async updateIsFavourite(req, res) {
     try {
       const {
@@ -127,6 +153,33 @@ module.exports = class RecipeController {
       // }
 
       // res.status(200).json(formatResponse(200, 'OK'));
+    } catch (error) {
+      res
+        .status(500)
+        .json(formatResponse(500, 'Unxpected server error', null, error.message));
+    }
+  }
+
+  static async deleteFavourite(req, res) {
+    try {
+      const { recipeId } = req.params;
+
+      const { user } = res.locals;
+      // console.log(user);
+
+      if (!recipeId) {
+        return res.status(400).json(formatResponse(400, 'Не передан ID рецепта'));
+      }
+
+      const isRecipeExists = await RecipeInformation.findOne({ where: { recipeId } });
+
+      if (!isRecipeExists || isRecipeExists.userId !== user.id) {
+        return res.status(400).json(formatResponse(400, 'Удаление не возможно'));
+      }
+
+      const isDelete = await isRecipeExists.destroy();
+
+      res.status(200).json(formatResponse(200, 'Рецепт удален'));
     } catch (error) {
       res
         .status(500)

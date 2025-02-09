@@ -10,6 +10,7 @@ import MainPage from '../pages/MainPage/MainPage';
 import RegistrPage from '../pages/RegistrPage/RegistrPage';
 import LoginPage from '../pages/LoginPage/LoginPage';
 import RecipeInformation from '../pages/RecipeInformation/RecipeInformation';
+import Cabinet from '../pages/Cabinet/Cabinet';
 
 
 
@@ -62,6 +63,10 @@ function App(): React.JSX.Element {
         {
           path: "/recipeInformation/:recipeId",
           element: <RecipeInformation setMessage={setMessage} />,
+        },
+        {
+          path: "/cabinet/:userId",
+          element: <Cabinet />,
         },
       ]}
   ]);

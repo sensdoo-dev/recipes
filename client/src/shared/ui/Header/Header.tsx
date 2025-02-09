@@ -63,7 +63,7 @@ export default function Header({user, setUser}) {
               <div className="navbar-item">
                 <div className="buttons">
                   <span>Добро пожаловать: <strong> | {user.firstName} | </strong></span>
-                  <NavLink to='/' className="button is-primary">
+                  <NavLink to={`/cabinet/${user.id}`} className="button is-primary">
                     <strong>Cabinet</strong>
                   </NavLink>
                   <button onClick={handleLogout} className="button is-light">
